@@ -11,5 +11,4 @@ So far, two decoders have been designed:
 ![dt1](https://user-images.githubusercontent.com/18025812/131258653-0715df8e-61b3-429e-9cd1-c94d2134875e.png)
 
 2. **Basic Multifunction Locomotive Decoder**: The idea is to have a miniature decoder that uses all the NMRA mandated and recommended CVs (motor acceleration, deceleration, signal timeout, manufacturer ID), as well as CV120 for master reset.
-![dl1](https://user-images.githubusercontent.com/18025812/131258390-26f2ef81-61a4-4aba-9843-a3d324514e3f.png)
-
+![dl1](https://user-images.githubusercontent.com/18025812/131259720-8a87d864-df40-4d0d-986d-fecaba1cd111.png)
