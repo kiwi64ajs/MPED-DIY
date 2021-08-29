@@ -1,4 +1,5 @@
-# MPED-DIY ![mped](https://user-images.githubusercontent.com/18025812/131257965-88c51056-2e75-40da-a982-547e7bd98faf.png)
+# MPED-DIY ![mped](https://user-images.githubusercontent.com/18025812/131258018-895c02df-3534-46fb-b06c-0407fd3e26a1.png)
+
 
 MPED DIY DCC decoders
 
