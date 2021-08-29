@@ -1,4 +1,4 @@
-# MPED-DIY ![mped-apple](https://user-images.githubusercontent.com/18025812/131257872-a57690bd-df30-4bdc-b458-b7c32bca0ac2.png)![mped](https://user-images.githubusercontent.com/18025812/131257965-88c51056-2e75-40da-a982-547e7bd98faf.png)
+# MPED-DIY ![mped](https://user-images.githubusercontent.com/18025812/131257965-88c51056-2e75-40da-a982-547e7bd98faf.png)
 
 MPED DIY DCC decoders
 
