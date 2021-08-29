@@ -3,7 +3,7 @@
 
 MPED DIY DCC decoders
 
-Based on the work of Geoff Bunza, I am creating my own miniature DIY decoders - PCB design and corresponding sketch.
+Based on the work of Geoff Bunza, I am designing my own miniature DIY decoders, which includes both PCB design and corresponding sketch.
 
 So far, two decoders have been designed:
 
