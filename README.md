@@ -1,5 +1,6 @@
 # MPED-DIY
-MPED DIY DCC decoders
+MPED DIY D![mped-apple](https://user-images.githubusercontent.com/18025812/131257872-a57690bd-df30-4bdc-b458-b7c32bca0ac2.png)
+CC decoders
 
 Based on the work of Geoff Bunza, I am creating my own miniature DIY decoders - PCB design and corresponding sketch.
 
