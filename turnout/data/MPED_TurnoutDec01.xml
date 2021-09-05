@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="../XSLT/decoder.xsl"?>
+<!-- Copyright (C) JMRI 2021 All rights reserved -->
+<!-- See the COPYING file for more information on licensing and appropriate use -->
+<!-- $Id$ -->
+<!--                                                                        -->
+<!-- JMRI is free software; you can redistribute it and/or modify it under  -->
+<!-- the terms of version 2 of the GNU General Public License as published  -->
+<!-- by the Free Software Foundation. See the "COPYING" file for a copy     -->
+<!-- of this license.                                                       -->
+<!--                                                                        -->
+<!-- JMRI is distributed in the hope that it will be useful, but WITHOUT    -->
+<!-- ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or  -->
+<!-- FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License  -->
+<!-- for more details.                                                      -->
+<decoder-config xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://jmri.org/xml/schema/decoder.xsd">
+	<version author="kiwi64ajs@gmail.com" version="1" lastUpdated="20210905"/>
+	<decoder>
+		<family name="Turnout Accessory Decoders" mfg="Public-domain and DIY" lowVersionID="1" comment="TurnoutDec01 is a DCC Accessory Decoder for a single Turnout" >
+			<model model="TurnoutDec01" />
+		</family>
+		<programming direct="yes" paged="yes" register="yes" ops="yes" >
+			<capability>
+				<name>Ops Mode Accessory Programming</name>
+				<parameter name="Address Type">signal</parameter>
+				<parameter name="Delay">500</parameter>
+			</capability>
+		</programming>
+		<variables>
+			<variable CV="1" mask="VVVVVVVV" default="1" tooltip="Range 1-2044" item="Long Address">
+				<splitVal highCV="9" upperMask="XXXXXVVV"/>
+				<label>Primary Decoder Address (1-2044)</label>
+			</variable>
+			<variable label="Version ID" item="Decoder Version" CV="7" readOnly="yes" default="1" >
+				<decVal/>
+			</variable>
+			<variable label="Manufacturer ID" item="Manufacturer" CV="8" readOnly="yes" default="13">
+				<decVal/>
+			</variable>
+			<variable label="Pulse Output On period (*10ms)" item="Pulse On Time" CV="2" default="5" >
+				<decVal min="2" max="100" />
+			</variable>
+			<variable label="CDU Recharge Time (*10ms)" item="CDU Recharge Time" CV="3" default="50" >
+				<decVal min="10" max="300" />
+			</variable>
+			<variable label="LED Blink Period (*10ms)" item="LED Blink Period" CV="4" default="50" >
+				<decVal min="10" max="300" />
+			</variable>
+		</variables>
+		<resets>
+			<factReset label="Reset All CVs" CV="8" default="8"/>
+        </resets>
+	</decoder>
+	<pane>
+		<name>Turnout Drive Timings</name>
+		<column>
+			<display item="Pulse On Time" label="Turnout On Pulse (*10ms)" />
+			<display item="CDU Recharge Time" label="Turnout CDU Recharge delay (*10ms)" />
+			<display item="LED Blink Period" label="LED Blink Period (*10ms)" />
+		</column>
+	</pane>
+</decoder-config>
