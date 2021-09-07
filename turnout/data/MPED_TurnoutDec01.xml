@@ -37,26 +37,37 @@
 			<variable label="Manufacturer ID" item="Manufacturer" CV="8" readOnly="yes" default="13">
 				<decVal/>
 			</variable>
-			<variable label="Pulse Output On period (*10ms)" item="Pulse On Time" CV="2" default="5" >
-				<decVal min="2" max="100" />
-			</variable>
-			<variable label="CDU Recharge Time (*10ms)" item="CDU Recharge Time" CV="3" default="50" >
-				<decVal min="10" max="300" />
-			</variable>
-			<variable label="LED Blink Period (*10ms)" item="LED Blink Period" CV="4" default="50" >
-				<decVal min="10" max="300" />
-			</variable>
+            <variable CV="121" mask="VVVVVVVV" item="Alt OPS Mode Address" default="0">
+				<splitVal highCV="122" upperMask="XXXXXVVV"  min="0" max="2047" />
+                <label>Alt OPS Mode Multifunction Decoder Address</label>
+            </variable>
+            <variable CV="33" item="Close time" default="5"  tooltip="Time to close turnout" >
+                <decVal max="255"/>
+                <label>Close time</label>
+                <comment>Range 0-255</comment>
+            </variable>
+            <variable CV="34" item="Throw time" default="5"  tooltip="Time to throw turnout" >
+                <decVal max="255"/>
+                <label>Throw time</label>
+                <comment>Range 0-255</comment>
+            </variable>
+            <variable CV="35" item="Blink time" default="25"  tooltip="Period of LED blinking" >
+                <decVal max="255"/>
+                <label>Blink time</label>
+                <comment>Range 0-255</comment>
+            </variable>
 		</variables>
 		<resets>
 			<factReset label="Reset All CVs" CV="8" default="8"/>
         </resets>
 	</decoder>
 	<pane>
-		<name>Turnout Drive Timings</name>
+		<name>Turnout Driver Timings</name>
 		<column>
-			<display item="Pulse On Time" label="Turnout On Pulse (*10ms)" />
-			<display item="CDU Recharge Time" label="Turnout CDU Recharge delay (*10ms)" />
-			<display item="LED Blink Period" label="LED Blink Period (*10ms)" />
+			<display item="Alt OPS Mode Address" label="Alt OPS Mode Multifunction Decoder Address" />
+			<display item="Close time" label="Turnout Close Pulse Period (*10ms)" />
+			<display item="Throw time" label="Turnout Throw Pulse Period (*10ms)" />
+			<display item="Blink time" label="LED Blink Period (*10ms)" />
 		</column>
 	</pane>
 </decoder-config>
