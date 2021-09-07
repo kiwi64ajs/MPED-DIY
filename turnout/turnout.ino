@@ -22,10 +22,25 @@
 
 #define MY_DECODER_VERSION  1
 
-#define PIN_CLOSE 0               // pin for closing turnout
-#define PIN_THROW 1               // pin for throwing turnout
-#define LED_CLOSE 3               // pin for closing turnout
-#define LED_THROW 4               // pin for throwing turnout
+  // This section define constants for the ATTiny85 Decoder
+#ifdef ARDUINO_AVR_ATTINYX5
+#define PIN_CLOSE 0           // pin for closing turnout
+#define PIN_THROW 1           // pin for throwing turnout
+#define LED_CLOSE 3           // pin for closing turnout
+#define LED_THROW 4           // pin for throwing turnout
+#define ENABLE_DCC_ACK_PIN   PIN_CLOSE  // Use the Closed Turnout Motor Output to generate a DCC ACK Pulse
+#endif 
+
+  // This section define constants for the Arduino UNO board + Iowa Scaled Engineering ARD-DCCSHIELD DCC Shield for testing
+#ifdef ARDUINO_AVR_UNO
+#define PIN_CLOSE  9           // pin for closing turnout
+#define PIN_THROW 10           // pin for throwing turnout
+#define LED_CLOSE 11           // pin for closing turnout
+#define LED_THROW 12           // pin for throwing turnout
+#define ENABLE_DCC_ACK_PIN 15 // This is A1 on the Iowa Scaled Engineering ARD-DCCSHIELD DCC Shield
+
+#define ENABLE_DEBUG
+#endif
 
 uint16_t Accessory_Address;  // Command address, Program address in Programmer mode
 uint8_t per_close;           // pulse period for close
@@ -79,6 +94,13 @@ uint16_t      TurnoutOnMillis;
 
 void notifyCVChange( uint16_t CV, uint8_t Value)
 {
+#ifdef ENABLE_DEBUG
+  Serial.print("notifyCVChange: CV: ");
+  Serial.print(CV);
+  Serial.print("  Value: ");
+  Serial.println(Value);
+#endif
+
   switch(CV)
   {
     case CV_CLOSE_PERIOD:
@@ -110,39 +132,48 @@ void notifyCVResetFactoryDefault()
 };
 
 extern void notifyDccAccTurnoutOutput( uint16_t Addr, uint8_t Direction, uint8_t OutputPower )
-{  
+{
+#ifdef ENABLE_DEBUG
+  Serial.print("notifyDccAccTurnoutOutput: Address: ");
+  Serial.print(Addr);
+  Serial.print("  Direction: ");
+  Serial.print(Direction);
+  Serial.print("  OutputPower: ");
+  Serial.println(OutputPower);
+#endif
   if (Addr == Accessory_Address)
   {
     TurnoutOnTimer = 0;
     
     if (Direction==0)
     {
-        // Disable both LEDs and the other Turnout Pin   
+        // Disable the other LED and Turnout Pin   
       digitalWrite(LED_CLOSE, LOW);
-      digitalWrite(LED_THROW, LOW);
       digitalWrite(PIN_CLOSE, LOW);
 
         // Enable the Thrown Turnout Pin and LED 
-      digitalWrite(PIN_THROW, HIGH);
       digitalWrite(LED_THROW, HIGH);
+      digitalWrite(PIN_THROW, HIGH);
 
       TurnoutOnMillis = per_throw * 10;
       DecoderState = DS_Thrown;
     }
     else
     {
-        // Disable both LEDs and the other Turnout Pin   
-      digitalWrite(LED_CLOSE, LOW);
+        // Disable the other LED and Turnout Pin   
       digitalWrite(LED_THROW, LOW);
       digitalWrite(PIN_THROW, LOW);
 
         // Enable the Closed Turnout Pin and LED 
-      digitalWrite(PIN_CLOSE, HIGH);
       digitalWrite(LED_CLOSE, HIGH);
+      digitalWrite(PIN_CLOSE, HIGH);
 
       TurnoutOnMillis = per_close * 10;
       DecoderState = DS_Closed;
     }
+#ifdef ENABLE_DEBUG
+    Serial.print("notifyDccAccTurnoutOutput: TurnoutOnMillis: "); Serial.println(TurnoutOnMillis);
+#endif
   }
 }
 
@@ -150,12 +181,20 @@ extern void notifyDccAccTurnoutOutput( uint16_t Addr, uint8_t Direction, uint8_t
 // Calling this function should cause an increased 60ma current drain on the power supply for 6ms to ACK a CV Read
 // So we will just turn the close solenoid on for 8ms and then turn it off again.
 
+#ifdef ENABLE_DCC_ACK_PIN
 void notifyCVAck(void)
 {
-  digitalWrite(PIN_CLOSE, HIGH);
-  delay( 8 );  
-  digitalWrite(PIN_CLOSE, LOW);
+  pinMode( ENABLE_DCC_ACK_PIN, OUTPUT );
+  
+  digitalWrite(ENABLE_DCC_ACK_PIN, HIGH);
+  delay( 10 );  
+  digitalWrite(ENABLE_DCC_ACK_PIN, LOW);
+
+#ifdef ENABLE_DEBUG
+  Serial.println("notifyCVAck");
+#endif
 }
+#endif
 
 void setup()
 {
@@ -171,6 +210,11 @@ void setup()
    pinMode(LED_CLOSE, OUTPUT);
    pinMode(LED_THROW, OUTPUT);
 
+#ifdef ENABLE_DEBUG
+  Serial.begin(115200);
+  Serial.println("setup: MPED DIY: Basic Accessory Turnout Decoder");
+#endif   
+
   // Setup which Pin the DCC Signal is on (and its acssociated External Interrupt)
   Dcc.pin(DCC_PIN, 0);
 
@@ -183,7 +227,20 @@ void setup()
   per_throw = Dcc.getCV(CV_THROW_PERIOD);
   per_blink = Dcc.getCV(CV_BLINK_PERIOD);
 
+#ifdef ENABLE_DEBUG
+  Serial.print("setup: Timer Values: Close: "); Serial.print(per_close); 
+  Serial.print("  Throw: "); Serial.print(per_throw); 
+  Serial.print("  Blink: "); Serial.println(per_blink); 
+#endif
+
+#ifdef ENABLE_DEBUG
+  Serial.print("setup: Decoder Address: "); Serial.println(Accessory_Address);
+#endif
+
 #ifdef RESET_CVS_TO_FACTORY_DEFAULT
+#ifdef ENABLE_DEBUG
+  Serial.println("setup: Trigger Restore Factory Defaults");
+#endif
   notifyCVResetFactoryDefault();
 #endif    
 }
@@ -194,10 +251,14 @@ void loop()
   Dcc.process();
 
     // Turn Off the Turnout Outputs if the Timer has elapsed
-  if(TurnoutOnTimer >= TurnoutOnMillis)
+  if(TurnoutOnMillis && (TurnoutOnTimer >= TurnoutOnMillis))
   {
+#ifdef ENABLE_DEBUG
+    Serial.println("loop: Disable Turnout pin after Time Delay");
+#endif
     digitalWrite(PIN_CLOSE, LOW);
     digitalWrite(PIN_THROW, LOW);
+    TurnoutOnMillis = 0;
   }
 
   if(DecoderState == DS_Unknown and per_blink > 0)
