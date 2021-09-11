@@ -18,7 +18,6 @@
 
 #define DCC_PIN                 2
 #define DEFAULT_DECODER_ADDRESS 1
-#define ALT_OPS_MODE_MULTIFUNCTION_ADDRESS  0
 
 #define MY_DECODER_VERSION  1
 
@@ -32,7 +31,7 @@
 #endif 
 
   // This section define constants for the Arduino UNO board + Iowa Scaled Engineering ARD-DCCSHIELD DCC Shield for testing
-#ifdef ARDUINO_AVR_UNO
+#if defined(ARDUINO_AVR_UNO) || defined(ARDUINO_AVR_MINI)
 #define PIN_CLOSE  9           // pin for closing turnout
 #define PIN_THROW 10           // pin for throwing turnout
 #define LED_CLOSE 11           // pin for closing turnout
@@ -65,7 +64,6 @@ enum DECODER_STATE
 #define CV_CLOSE_PERIOD           33  // CV address for close period in cs
 #define CV_THROW_PERIOD           34  // CV address for throw period in cs
 #define CV_BLINK_PERIOD           35  // CV address for blink period in cs
-#define CV_ALT_OPS_MODE_MULTIFUNCTION_ADDR 121 // CV address for the Alternative Ops Mode Multifunction Decoder Address Base for alternate OPS Mode Programming via Multifunction protocol.
 
 // Default CV Values Table
 CVPair FactoryDefaultCVs [] =
@@ -73,12 +71,9 @@ CVPair FactoryDefaultCVs [] =
 // Command address, Program address in Programmer mode
   {CV_ACCESSORY_DECODER_ADDRESS_LSB,       DEFAULT_DECODER_ADDRESS & 0xFF},
   {CV_ACCESSORY_DECODER_ADDRESS_MSB,      (DEFAULT_DECODER_ADDRESS >> 8) & 0x07},
-  {CV_29_CONFIG, CV29_ACCESSORY_DECODER | CV29_OUTPUT_ADDRESS_MODE},
   {CV_CLOSE_PERIOD, 5},
   {CV_THROW_PERIOD, 5},
   {CV_BLINK_PERIOD, 25},
-  {CV_ALT_OPS_MODE_MULTIFUNCTION_ADDR,     ALT_OPS_MODE_MULTIFUNCTION_ADDRESS & 0xFF },
-  {CV_ALT_OPS_MODE_MULTIFUNCTION_ADDR + 1,(ALT_OPS_MODE_MULTIFUNCTION_ADDRESS >> 8) & 0x3F },
 };
 
 NmraDcc  Dcc;
@@ -219,7 +214,7 @@ void setup()
   Dcc.pin(DCC_PIN, 0);
 
   // Call the main DCC Init function to enable the DCC Receiver
-  Dcc.init( MAN_ID_DIY, MY_DECODER_VERSION, FLAGS_OUTPUT_ADDRESS_MODE | FLAGS_DCC_ACCESSORY_DECODER, CV_ALT_OPS_MODE_MULTIFUNCTION_ADDR);
+  Dcc.init( MAN_ID_DIY, MY_DECODER_VERSION, FLAGS_EXTENDED_ACCESSORY_DECODER, 0);
 
     // Read the current CV values
   Accessory_Address = Dcc.getAddr();

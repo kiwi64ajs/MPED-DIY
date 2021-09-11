@@ -14,7 +14,7 @@
 <!-- FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License  -->
 <!-- for more details.                                                      -->
 <decoder-config xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://jmri.org/xml/schema/decoder.xsd">
-	<version author="kiwi64ajs@gmail.com" version="1" lastUpdated="20210905"/>
+	<version author="kiwi64ajs@gmail.com" version="1" lastUpdated="20210911"/>
 	<decoder>
 		<family name="Turnout Accessory Decoders" mfg="Public-domain and DIY" lowVersionID="1" comment="TurnoutDec01 is a DCC Accessory Decoder for a single Turnout" >
 			<model model="TurnoutDec01" />
@@ -22,25 +22,21 @@
 		<programming direct="yes" paged="yes" register="yes" ops="yes" >
 			<capability>
 				<name>Ops Mode Accessory Programming</name>
-				<parameter name="Address Type">signal</parameter>
+				<parameter name="Address Type">accessory</parameter>
 				<parameter name="Delay">500</parameter>
 			</capability>
 		</programming>
 		<variables>
 			<variable CV="1" mask="VVVVVVVV" default="1" tooltip="Range 1-2044" item="Long Address">
 				<splitVal highCV="9" upperMask="XXXXXVVV"/>
-				<label>Primary Decoder Address (1-2044)</label>
-			</variable>
-			<variable label="Version ID" item="Decoder Version" CV="7" readOnly="yes" default="1" >
-				<decVal/>
+				<label>Accessory Decoder Address (1-2044)</label>
 			</variable>
 			<variable label="Manufacturer ID" item="Manufacturer" CV="8" readOnly="yes" default="13">
 				<decVal/>
 			</variable>
-            <variable CV="121" mask="VVVVVVVV" item="Alt OPS Mode Address" default="0">
-				<splitVal highCV="122" upperMask="XXXXXVVV"  min="0" max="2047" />
-                <label>Alt OPS Mode Multifunction Decoder Address</label>
-            </variable>
+			<variable label="Version ID" item="Decoder Version" CV="7" readOnly="yes" default="1" >
+				<decVal/>
+			</variable>
             <variable CV="33" item="Close time" default="5"  tooltip="Time to close turnout" >
                 <decVal max="255"/>
                 <label>Close time</label>
@@ -62,9 +58,13 @@
         </resets>
 	</decoder>
 	<pane>
-		<name>Turnout Driver Timings</name>
+		<name>Basic</name>
 		<column>
-			<display item="Alt OPS Mode Address" label="Alt OPS Mode Multifunction Decoder Address" />
+			<display item="Long Address" label="Accessory Decoder Address (1-2044)" />
+			<separator/>
+			<display item="Manufacturer" label="Manufacturer ID" />
+			<display item="Decoder Version" label="Version ID" />
+			<separator/>
 			<display item="Close time" label="Turnout Close Pulse Period (*10ms)" />
 			<display item="Throw time" label="Turnout Throw Pulse Period (*10ms)" />
 			<display item="Blink time" label="LED Blink Period (*10ms)" />
